@@ -1,0 +1,30 @@
+project (Assingment3) {
+	exename = Assignment3
+
+	specific(make){
+		compile_flags += -std=c++11
+	}
+
+	Source_Files {
+		driver.cpp
+	}
+
+	Template_Files {
+		Base_Array.cpp
+		Array.cpp
+		Stack.cpp
+	}
+
+	Header_Files {
+		Base_Array.h
+		Array.h
+		Stack.h
+	}
+
+	Inline_Files {
+		Base_Array.inl
+		Array.inl
+		Stack.inl
+	}
+}
+
