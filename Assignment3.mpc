@@ -5,20 +5,38 @@ project (Assingment3) {
 		compile_flags += -std=c++11
 	}
 
+	Header_Files {
+		Base_Array.h
+		Array.h
+		Stack.h
+		Abstract_Factory.h
+		Stack_Factory.h
+		Command.h
+		Num_Command.h
+		Add_Command.h
+		Sub_Command.h
+		Mul_Command.h
+		Div_Command.h
+		Mod_Command.h
+		Neg_Command.h
+	}
+
 	Source_Files {
 		driver.cpp
+		Stack_Factory.cpp
+		Num_Command.cpp
+		Add_Command.cpp
+		Sub_Command.cpp
+		Mul_Command.cpp
+		Div_Command.cpp
+		Mod_Command.cpp
+		Neg_Command.cpp
 	}
 
 	Template_Files {
 		Base_Array.cpp
 		Array.cpp
 		Stack.cpp
-	}
-
-	Header_Files {
-		Base_Array.h
-		Array.h
-		Stack.h
 	}
 
 	Inline_Files {
