@@ -11,6 +11,7 @@
 #define _STACK_H_
 
 #include <exception>
+#include "Array.h"
 
 /**
  * @class Stack
@@ -75,7 +76,7 @@ public:
    *
    * @exception      empty_exception    The stack is empty.
    */
-  void pop (void);
+  T pop (void);
 
   /**
    * Get the top-most element on the stack. If there are no element 

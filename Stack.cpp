@@ -119,13 +119,13 @@ void Stack <T>::push (T element)
 // pop
 //
 template <typename T>
-void Stack <T>::pop (void)
+T Stack <T>::pop (void)
 {
 	if(is_empty_)
 	{//throw the empty exception.
 		throw Stack <T>::empty_exception();
 	}
-	//T hold = top_;
+	T hold = top_;
 	cur_size_ = cur_size_ - 1;//decrement current size
 	if(cur_size_ == 0)
 	{//check if removing the element emptied the array
@@ -136,7 +136,7 @@ void Stack <T>::pop (void)
 	{//assign a new topmost element
 		top_ = array[cur_size_ - 1];
 	}
-	//return hold;
+	return hold;
 	//Shouldn't pop return the item that was popped off?
 }
 
