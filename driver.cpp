@@ -1,26 +1,109 @@
 #include "Array.h"
 #include "Base_Array.h"
 #include "Stack.h"
+#include "Abstract_Factory.h"
+#include "Stack_Factory.h"
+#include "Command.h"
+#include "Num_Command.h"
+//#include "Invoker.cpp"
 
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 
-void array_test();
-void stack_test();
-void base_array_test();
+//void array_test();
+//void stack_test();
+//void base_array_test();
+void pre_run_tests();
+void post_run_code();
+bool infix_to_postfix(std::string, Array<Command*>);
+bool evaluate(Array<Command*>);
+void check_command(std::string token, Command &command, Array<Command*> &array);
 
 int main()
 {
 
-	array_test();
+	printf( "Welcome to the Infix to Postfix converting program\n" );
+	printf( "Let me just run some tests here...\n" );
+	
+	pre_run_tests();
+	
+	printf( "OK, done.\n" );
 
-	stack_test();
-
-//	base_array_test();
+	post_run_code();
+	
+//	while(true)
+//	{
+//		std::getline(std::cin, input);
+//		if(input.compare("QUIT") == 0)
+//		{
+//			break;
+//		}
+//		postfix = infix_to_postfix(input);
+//		std::cout << "You typed: " << input << "\n";
+//	}
 
 }
 
+void post_run_code()
+{
+	std::string input;
+
+
+//	input = "+";
+//	std::string test = "+";
+//	if(input.compare(test) == 0)
+//	{
+//		printf("It worked!\n");
+//	}
+	
+}
+
+void pre_run_tests()
+{
+	//infix_to_postfix("1 + 2 - 3");
+	Stack <int> stack;
+	Num_Command command (5);
+	command.execute(stack);
+	
+	std::cout << stack.pop() << "\n";
+//	stack_test();
+}
+
+bool infix_to_postfix(std::string input, Array<Command*> &array)
+{
+	if(input.compare("QUIT") == 0)
+	{
+		return false;
+	}
+	std::string work;
+	int i = 0;
+	std::istringstream infix (input);
+	std::string token;
+	Command *cmd = NULL;
+	while(!infix.eof())
+	{
+		infix >> token;
+	
+		check_command(token, *cmd, array);
+	}
+}
+
+void check_command(std::string token, Command &command, Array<Command*> &array)
+{
+	if(token.compare("+") == 0)
+	{
+		
+	}
+}
+
+bool evaluate(Array<Command*> &array)
+{
+	
+}
+
+/*
 void base_array_test()
 {
 	Base_Array<int> barr1 (11, 9);
@@ -53,16 +136,16 @@ void array_test()
 	Array<int> arr3 (11, 9);
 	arr1.set(5, 12);
 	arr1.set(7, 9.0);
-/*
-	std::cout << arr1.get(5) << std::endl;
-	std::cout << arr1.find(12) << std::endl;
-	std::cout << arr1.find(9) << std::endl;
-	std::cout << arr1.find(9, 3) << std::endl;
-	std::cout << arr1.find(9, 5) << std::endl;
-	std::cout << arr1.find(9, 7) << std::endl;
-	std::cout << arr1.find(8) << std::endl;
-	std::cout << arr2[3] << std::endl << std::endl;
-*/
+
+//	std::cout << arr1.get(5) << std::endl;
+//	std::cout << arr1.find(12) << std::endl;
+//	std::cout << arr1.find(9) << std::endl;
+//	std::cout << arr1.find(9, 3) << std::endl;
+//	std::cout << arr1.find(9, 5) << std::endl;
+//	std::cout << arr1.find(9, 7) << std::endl;
+//	std::cout << arr1.find(8) << std::endl;
+//	std::cout << arr2[3] << std::endl << std::endl;
+
 	Array<int> arr2 (7, 3);
 	std::cout << arr1.size() << std::endl;
 	std::cout << arr2.size() << std::endl;
@@ -135,8 +218,7 @@ void stack_test()
 	while(!s1.is_empty())
 	{
 		std::cout << s1.size() << std::endl;
-		std::cout << s1.top() << std::endl;
-		s1.pop();
+		std::cout << s1.pop() << std::endl;
 	}
 	std::cout << s1.size() << std::endl;
 
@@ -144,8 +226,7 @@ void stack_test()
 	while(!s2.is_empty())
 	{
 		std::cout << s2.size() << std::endl;
-		std::cout << s2.top() << std::endl;
-		s2.pop();
+		std::cout << s2.pop() << std::endl;
 	}
 	std::cout << s2.size() << std::endl;
 
@@ -153,8 +234,7 @@ void stack_test()
 	while(!s3.is_empty())
 	{
 		std::cout << s3.size() << std::endl;
-		std::cout << s3.top() << std::endl;
-		s3.pop();
+		std::cout << s3.pop() << std::endl;
 	}
 	std::cout << s3.size() << std::endl;
 
@@ -163,8 +243,7 @@ void stack_test()
 	while(!s4.is_empty())
 	{
 		std::cout << s4.size() << std::endl;
-		std::cout << s4.top() << std::endl;
-		s4.pop();
+		std::cout << s4.pop() << std::endl;
 	}
 	std::cout << s4.size() << std::endl;
 
@@ -174,8 +253,7 @@ void stack_test()
 	while(!ch.is_empty())
 	{
 		std::cout << ch.size() << std::endl;
-		std::cout << ch.top() << std::endl;
-		ch.pop();
+		std::cout << ch.pop() << std::endl;
 	}
 	std::cout << ch.size() << std::endl;
 
@@ -183,8 +261,7 @@ void stack_test()
 	while(!ch2.is_empty())
 	{
 		std::cout << ch2.size() << std::endl;
-		std::cout << ch2.top() << std::endl;
-		ch2.pop();
+		std::cout << ch2.pop() << std::endl;
 	}
 	std::cout << ch2.size() << std::endl;
 
@@ -192,8 +269,8 @@ void stack_test()
 	while(!ch3.is_empty())
 	{
 		std::cout << ch3.size() << std::endl;
-		std::cout << ch3.top() << std::endl;
-		ch3.pop();
+		std::cout << ch3.pop() << std::endl;
 	}
 	std::cout << ch.size() << std::endl;
 }
+*/
