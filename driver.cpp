@@ -1,3 +1,8 @@
+// Honor Pledge:
+//
+// I pledge that I have neither given nor receieved any help
+// on this assignment.
+
 #include "Array.h"
 #include "Base_Array.h"
 #include "Stack.h"
@@ -24,6 +29,7 @@
 //void stack_test();
 //void base_array_test();
 void run_code();
+void run_test(Queue<std::string*>);
 bool infix_to_postfix(std::istringstream*, Stack<std::string>, Queue<std::string>);
 void clear_stack(std::string, Stack<std::string>, Queue<std::string>);
 bool postfix_to_command(Queue<std::string>, Queue<Command*>);
@@ -35,28 +41,15 @@ int main()
 {
 
 	printf( "Welcome to the Infix to Postfix converting program\n" );
-
-//	std::string token = 0;
-//	int thing = "";	
-	
+		
 	run_code();
 	
-//	while(true)
-//	{
-//		std::getline(std::cin, input);
-//		if(input.compare("QUIT") == 0)
-//		{
-//			break;
-//		}
-//		postfix = infix_to_postfix(input);
-//		std::cout << "You typed: " << input << "\n";
-//	}
-
 }
 
 void run_code()
 {
 	std::string input;
+//	std::string to_add = ":";
 	Queue<std::string> queue;
 	Queue<Command*> commands;
 	Stack<std::string> stack;
@@ -66,70 +59,105 @@ void run_code()
 		flag = true;
 		printf("Please input an equation:\n");
 		getline(std::cin, input);
-//		printf("Thanks");
+
 		if( input.compare("QUIT") == 0 )
 		{
 			break;
 		}
-//		printf("Well, guess you're not quitting");
+
 		std::istringstream infix (input);
 		flag = infix_to_postfix(&infix, stack, queue);
+		while( !stack.is_empty() )
+		{
+			std::cout << stack.top() << " ";
+			queue.enqueue(stack.pop());
+		} 
 		if(flag)
 		{
-			flag = postfix_to_command(queue, commands);
+			//flag = postfix_to_command(queue, commands);
+//			printf("Well, it was valid\n");
+//			queue.enqueue( to_add );
+			while(!queue.is_empty())
+			{
+				std::cout << queue.dequeue() << "\n";
+			}
+		
 		}
+
 //		if(flag)
 //		{
 //			evaluate(commands);
 //		}
+
 	}
 	printf("Goodbye\n");
 }
 
-
+/*
+ * 
+ */
 bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queue<std::string> postfix)
 {
 	std::string token;
 	
 	while(!infix->eof())
 	{
-//		printf("Here");
 		*infix >> token;
-//		printf("And Here");
+		
 		if( is_integer(token) )
 		{
 			printf("Number!\n");
-//			postfix.enqueue(token);
+			postfix.enqueue(token);
+//			std::cout << token << " ";
 		}
 		else if( token.compare("+") == 0 )
 		{
-			printf("Plus!\n");	
+			printf("Plus!\n");
+			clear_stack( token, stack, postfix );
+			stack.push( token );
 		}
 		else if( token.compare("-") == 0 )
 		{
 			printf("Minus!\n");
+			clear_stack( token, stack, postfix );
+			stack.push( token );
 		}
 		else if( token.compare("*") == 0 )
 		{
 			printf("Multiplication!\n");
-//			stack.push( token );
+			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			{
+				postfix.enqueue( stack.pop() );
+//				std::cout << token << " ";
+			}
+			stack.push( token );
 		}
 		else if( token.compare("/") == 0 )
 		{
 			printf("Division!\n");
-//			stack.push( token );
+			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			{
+				postfix.enqueue( stack.pop() );
+//				std::cout << token << " ";
+			}
+			stack.push( token );
 			
 		}
 		else if( token.compare("%") == 0 )
 		{
 			printf("Modulus!\n");
-//			stack.push( token );
+			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			{
+				postfix.enqueue( stack.pop() );
+//				std::cout << token << " ";
+			}
+			stack.push( token );
 			
 		}
 		else if( token.compare("(") == 0 )
 		{
 			printf("Parenthesis!\n");			
-//			clear_stack(token, stack, postfix);
+			stack.push( token );
 			// Use an if statement to make sure that if the process fails
 			// while recursing, it fails all the way up.
 			if( !infix_to_postfix( infix, stack, postfix ) )
@@ -140,7 +168,8 @@ bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queu
 		}
 		else if( token.compare(")") == 0 )
 		{
-			printf("Parenthesis!\n");			
+			printf("Parenthesis!\n");
+			clear_stack(token, stack, postfix);			
 			break;
 		}
 		else
@@ -154,14 +183,57 @@ bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queu
 //		}
 	}
 //	printf("Valid equation processed. Well done.\n");
-//	return true;
+	return true;
 }
 
-void clear_stack(std::string until, Stack<std::string> to_clear, Queue<std::string> take)
+/*
+ * Clear the stack, with rules based on the string passed in. If the string
+ * is a + or - sign, pop until you see a plus or a minus sign. If the string
+ * is a closed parenthesis, pop until you see an open parenthesis. Else, pop 
+ * until the stack is empty.
+ */
+
+void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string> take)
 {
-	while( !to_clear.is_empty() )
+	while( !stack.is_empty() )
 	{
-		take.enqueue(to_clear.pop());
+		if( ( until.compare("+") == 0 || until.compare("-") == 0 ) )
+		{
+			if( stack.top().compare("+") == 0 || stack.top().compare("-") == 0 )
+			{
+				take.enqueue( stack.top() );
+//				std::cout << stack.pop() << " ";
+//				printf("Added plus or minus to the queue.");
+				break;
+			}
+			else if( stack.top().compare("(") == 0 )
+			{
+				break;
+			}
+			else
+			{
+				take.enqueue( stack.top() );
+//				std::cout << stack.pop() << " ";
+			}
+		}
+		else if( until.compare(")") == 0 )
+		{
+			if( stack.top().compare("(") == 0 )
+			{
+				stack.pop();
+				break;
+			}
+			else
+			{
+				take.enqueue( stack.top() );
+//				std::cout << stack.pop() << " ";
+			}
+		}
+		else
+		{
+			take.enqueue( stack.top() );
+//			std::cout << stack.pop() << " ";
+		}
 	}
 }
 
