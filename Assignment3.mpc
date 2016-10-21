@@ -9,6 +9,7 @@ project (Assingment3) {
 		Base_Array.h
 		Array.h
 		Stack.h
+		Queue.h
 		Abstract_Factory.h
 		Stack_Factory.h
 		Command.h
@@ -18,7 +19,7 @@ project (Assingment3) {
 		Mul_Command.h
 		Div_Command.h
 		Mod_Command.h
-		Neg_Command.h
+//		Neg_Command.h
 	}
 
 	Source_Files {
@@ -30,19 +31,21 @@ project (Assingment3) {
 		Mul_Command.cpp
 		Div_Command.cpp
 		Mod_Command.cpp
-		Neg_Command.cpp
+//		Neg_Command.cpp
 	}
 
 	Template_Files {
 		Base_Array.cpp
 		Array.cpp
 		Stack.cpp
+		Queue.cpp
 	}
 
 	Inline_Files {
 		Base_Array.inl
 		Array.inl
 		Stack.inl
+		Queue.inl
 	}
 }
 
