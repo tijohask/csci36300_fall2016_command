@@ -46,6 +46,11 @@ int main()
 	
 }
 
+/*
+ * I wanted to put most of my code in this method, 
+ * just in case I wanted to run some tests from main
+ */
+
 void run_code()
 {
 	std::string input;
@@ -94,7 +99,8 @@ void run_code()
 }
 
 /*
- * 
+ * Takes in a stringstream object and updates the queue 
+ * to have the equation in postfix form
  */
 bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queue<std::string> postfix)
 {
@@ -125,7 +131,7 @@ bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queu
 		else if( token.compare("*") == 0 )
 		{
 			printf("Multiplication!\n");
-			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			if( !stack.is_empty() && (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) )
 			{
 				postfix.enqueue( stack.pop() );
 //				std::cout << token << " ";
@@ -135,7 +141,7 @@ bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queu
 		else if( token.compare("/") == 0 )
 		{
 			printf("Division!\n");
-			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			if( !stack.is_empty() && (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) )
 			{
 				postfix.enqueue( stack.pop() );
 //				std::cout << token << " ";
@@ -146,7 +152,7 @@ bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queu
 		else if( token.compare("%") == 0 )
 		{
 			printf("Modulus!\n");
-			if(stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0)
+			if( !stack.is_empty() && (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) )
 			{
 				postfix.enqueue( stack.pop() );
 //				std::cout << token << " ";
@@ -201,7 +207,7 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 		{
 			if( stack.top().compare("+") == 0 || stack.top().compare("-") == 0 )
 			{
-				take.enqueue( stack.top() );
+				take.enqueue( stack.pop() );
 //				std::cout << stack.pop() << " ";
 //				printf("Added plus or minus to the queue.");
 				break;
@@ -212,7 +218,7 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 			}
 			else
 			{
-				take.enqueue( stack.top() );
+				take.enqueue( stack.pop() );
 //				std::cout << stack.pop() << " ";
 			}
 		}
@@ -225,18 +231,21 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 			}
 			else
 			{
-				take.enqueue( stack.top() );
+				take.enqueue( stack.pop() );
 //				std::cout << stack.pop() << " ";
 			}
 		}
 		else
 		{
-			take.enqueue( stack.top() );
+			take.enqueue( stack.pop() );
 //			std::cout << stack.pop() << " ";
 		}
 	}
 }
 
+/*
+ * This will take the postfix queue created above and parse it into a command queue
+ */
 
 bool postfix_to_command(Queue<std::string> input, Queue<Command*> queue)
 {
@@ -247,9 +256,7 @@ bool postfix_to_command(Queue<std::string> input, Queue<Command*> queue)
 	while(!input.is_empty())
 	{
 		token = input.dequeue();
-	
-//		make_command(token, *cmd, queue);
-		
+			
 		if(      token.compare("+") == 0 )
 		{
 			cmd = factory.create_add_command();
@@ -288,21 +295,22 @@ bool postfix_to_command(Queue<std::string> input, Queue<Command*> queue)
 	}
 }
 
-void make_command(std::string token, Command &command, Queue<Command*> queue)
-{
-
-		
-}
-
+/*
+ * Checks whether the input string is a valid integer value. 
+ * Allows for negative signs.
+ */
 bool is_integer(std::string line)
 {
     char* p;
     strtol(line.c_str(), &p, 10);
     return *p == 0;
 }
-// Tested. Allows the inclusion of negative integers without tripping
-// on just the negative sign. very useful
 
+/*
+ * Runs through the Queue and executes the commands, then prints the resultant
+ * number on the top of the stack. If the stack does not have exactly one 
+ * element, return false.
+ */
 bool evaluate(Queue<Command*> queue)
 {
 	Command * cmd;
