@@ -8,7 +8,7 @@
 #include "Mul_Command.h"
 #include "Div_Command.h"
 #include "Mod_Command.h"
-#include "Neg_Command.h"
+//#include "Neg_Command.h"
 #include <iostream>
 
 class Abstract_Factory
@@ -20,7 +20,7 @@ public:
 	virtual Mul_Command * create_mul_command () = 0;
 	virtual Div_Command * create_div_command () = 0;
 	virtual Mod_Command * create_mod_command () = 0;
-	virtual Neg_Command * create_neg_command () = 0;
+//	virtual Neg_Command * create_neg_command () = 0;
 };
 
 #endif

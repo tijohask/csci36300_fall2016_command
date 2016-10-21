@@ -9,7 +9,7 @@
 #include "Mul_Command.h"
 #include "Div_Command.h"
 #include "Mod_Command.h"
-#include "Neg_Command.h"
+//#include "Neg_Command.h"
 
 Num_Command * Stack_Factory::create_num_command(int n)
 {
@@ -35,7 +35,7 @@ Mod_Command * Stack_Factory::create_mod_command(void)
 {
 	return new Mod_Command();
 }
-Neg_Command * Stack_Factory::create_neg_command(void)
-{
-	return new Neg_Command();
-}
+//Neg_Command * Stack_Factory::create_neg_command(void)
+//{
+//	return new Neg_Command();
+//}

@@ -21,7 +21,7 @@ public:
 	virtual Mul_Command * create_mul_command ();
 	virtual Div_Command * create_div_command ();
 	virtual Mod_Command * create_mod_command ();
-	virtual Neg_Command * create_neg_command ();
+//	virtual Neg_Command * create_neg_command ();
 };
 
 #endif
