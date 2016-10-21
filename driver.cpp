@@ -207,8 +207,8 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 		{
 			if( stack.top().compare("+") == 0 || stack.top().compare("-") == 0 )
 			{
+//				std::cout << stack.top() << " ";
 				take.enqueue( stack.pop() );
-//				std::cout << stack.pop() << " ";
 //				printf("Added plus or minus to the queue.");
 				break;
 			}
@@ -218,8 +218,8 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 			}
 			else
 			{
+//				std::cout << stack.top() << " ";
 				take.enqueue( stack.pop() );
-//				std::cout << stack.pop() << " ";
 			}
 		}
 		else if( until.compare(")") == 0 )
@@ -231,14 +231,14 @@ void clear_stack(std::string until, Stack<std::string> stack, Queue<std::string>
 			}
 			else
 			{
+//				std::cout << stack.top() << " ";
 				take.enqueue( stack.pop() );
-//				std::cout << stack.pop() << " ";
 			}
 		}
 		else
 		{
+//			std::cout << stack.top() << " ";
 			take.enqueue( stack.pop() );
-//			std::cout << stack.pop() << " ";
 		}
 	}
 }
