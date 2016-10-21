@@ -29,7 +29,7 @@
 #define _CUR_SIZE_ 0
 
 // The default Top element for the stack.
-#define _TOP_ (T) NULL
+#define _TOP_
 
 // The default is_empty_ boolean for the stack.
 #define _IS_EMPTY_ true
@@ -130,7 +130,7 @@ T Stack <T>::pop (void)
 	if(cur_size_ == 0)
 	{//check if removing the element emptied the array
 		is_empty_ = true;
-		top_ = _TOP_;
+//		top_ = _TOP_;
 	}
 	else
 	{//assign a new topmost element
@@ -174,7 +174,7 @@ void Stack <T>::clear (void)
 {
 	//assign everything to their default values
 	Array<T> array (_START_SIZE_);
-	top_ = _TOP_;
+//	top_ = _TOP_;
 	cur_size_ = _CUR_SIZE_;
 	is_empty_ = _IS_EMPTY_;
 }
