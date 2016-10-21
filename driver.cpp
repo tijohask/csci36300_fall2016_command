@@ -1,37 +1,45 @@
 #include "Array.h"
 #include "Base_Array.h"
 #include "Stack.h"
+#include "Queue.h"
+
 #include "Abstract_Factory.h"
 #include "Stack_Factory.h"
 #include "Command.h"
 #include "Num_Command.h"
-//#include "Invoker.cpp"
+#include "Add_Command.h"
+#include "Sub_Command.h"
+#include "Mul_Command.h"
+#include "Div_Command.h"
+#include "Mod_Command.h"
+//#include "Neg_Command.h"
 
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+//#include <stack>
 
 //void array_test();
 //void stack_test();
 //void base_array_test();
-void pre_run_tests();
-void post_run_code();
-bool infix_to_postfix(std::string, Array<Command*>);
-bool evaluate(Array<Command*>);
-void check_command(std::string token, Command &command, Array<Command*> &array);
+void run_code();
+bool infix_to_postfix(std::istringstream*, Stack<std::string>, Queue<std::string>);
+void clear_stack(std::string, Stack<std::string>, Queue<std::string>);
+bool postfix_to_command(Queue<std::string>, Queue<Command*>);
+bool evaluate(Queue<Command*>);
+void make_command(std::string token, Command &command, Queue<Command*> queue);
+bool is_integer(std::string);
 
 int main()
 {
 
 	printf( "Welcome to the Infix to Postfix converting program\n" );
-	printf( "Let me just run some tests here...\n" );
-	
-	pre_run_tests();
-	
-	printf( "OK, done.\n" );
 
-	post_run_code();
+//	std::string token = 0;
+//	int thing = "";	
+	
+	run_code();
 	
 //	while(true)
 //	{
@@ -46,231 +54,190 @@ int main()
 
 }
 
-void post_run_code()
+void run_code()
 {
 	std::string input;
-
-
-//	input = "+";
-//	std::string test = "+";
-//	if(input.compare(test) == 0)
-//	{
-//		printf("It worked!\n");
-//	}
-	
-}
-
-void pre_run_tests()
-{
-	//infix_to_postfix("1 + 2 - 3");
-	Stack <int> stack;
-	Num_Command command (5);
-	command.execute(stack);
-	
-	std::cout << stack.pop() << "\n";
-//	stack_test();
-}
-
-bool infix_to_postfix(std::string input, Array<Command*> &array)
-{
-	if(input.compare("QUIT") == 0)
-	{
-		return false;
+	Queue<std::string> queue;
+	Queue<Command*> commands;
+	Stack<std::string> stack;
+	bool flag = true;
+	while(true)
+	{	
+		flag = true;
+		printf("Please input an equation:\n");
+		getline(std::cin, input);
+//		printf("Thanks");
+		if( input.compare("QUIT") == 0 )
+		{
+			break;
+		}
+//		printf("Well, guess you're not quitting");
+		std::istringstream infix (input);
+		flag = infix_to_postfix(&infix, stack, queue);
+		if(flag)
+		{
+			flag = postfix_to_command(queue, commands);
+		}
+//		if(flag)
+//		{
+//			evaluate(commands);
+//		}
 	}
+	printf("Goodbye\n");
+}
+
+
+bool infix_to_postfix(std::istringstream * infix, Stack<std::string> stack, Queue<std::string> postfix)
+{
+	std::string token;
+	
+	while(!infix->eof())
+	{
+//		printf("Here");
+		*infix >> token;
+//		printf("And Here");
+		if( is_integer(token) )
+		{
+			printf("Number!\n");
+//			postfix.enqueue(token);
+		}
+		else if( token.compare("+") == 0 )
+		{
+			printf("Plus!\n");	
+		}
+		else if( token.compare("-") == 0 )
+		{
+			printf("Minus!\n");
+		}
+		else if( token.compare("*") == 0 )
+		{
+			printf("Multiplication!\n");
+//			stack.push( token );
+		}
+		else if( token.compare("/") == 0 )
+		{
+			printf("Division!\n");
+//			stack.push( token );
+			
+		}
+		else if( token.compare("%") == 0 )
+		{
+			printf("Modulus!\n");
+//			stack.push( token );
+			
+		}
+		else if( token.compare("(") == 0 )
+		{
+			printf("Parenthesis!\n");			
+//			clear_stack(token, stack, postfix);
+			// Use an if statement to make sure that if the process fails
+			// while recursing, it fails all the way up.
+			if( !infix_to_postfix( infix, stack, postfix ) )
+			{
+				return false;
+			}
+			
+		}
+		else if( token.compare(")") == 0 )
+		{
+			printf("Parenthesis!\n");			
+			break;
+		}
+		else
+		{
+			std::cout << token << " Is not a valid equation character.\n";
+			return false;
+		}
+//		else if( token.compare("-") == 0 )
+//		{
+//			
+//		}
+	}
+//	printf("Valid equation processed. Well done.\n");
+//	return true;
+}
+
+void clear_stack(std::string until, Stack<std::string> to_clear, Queue<std::string> take)
+{
+	while( !to_clear.is_empty() )
+	{
+		take.enqueue(to_clear.pop());
+	}
+}
+
+
+bool postfix_to_command(Queue<std::string> input, Queue<Command*> queue)
+{
 	std::string work;
-	int i = 0;
-	std::istringstream infix (input);
 	std::string token;
 	Command *cmd = NULL;
-	while(!infix.eof())
+	Stack_Factory factory;
+	while(!input.is_empty())
 	{
-		infix >> token;
+		token = input.dequeue();
 	
-		check_command(token, *cmd, array);
-	}
-}
-
-void check_command(std::string token, Command &command, Array<Command*> &array)
-{
-	if(token.compare("+") == 0)
-	{
+//		make_command(token, *cmd, queue);
 		
+		if(      token.compare("+") == 0 )
+		{
+			cmd = factory.create_add_command();
+			queue.enqueue(cmd);
+		}
+		else if( token.compare("-") == 0 )
+		{
+			cmd = factory.create_sub_command();
+			queue.enqueue(cmd);
+		}
+		else if( token.compare("*") == 0 )
+		{
+			cmd = factory.create_mul_command();
+			queue.enqueue(cmd);
+		}
+		else if( token.compare("/") == 0 )
+		{
+			cmd = factory.create_div_command();
+			queue.enqueue(cmd);
+		}
+		else if( token.compare("%") == 0 )
+		{
+			cmd = factory.create_mod_command();
+			queue.enqueue(cmd);
+		}
+//		else if( token.compare("-") == 0 )
+//		{
+//			cmd = factory.create_neg_command();
+//			queue.enqueue(cmd);
+//		}
+		else
+		{
+			cmd = factory.create_num_command(std::stoi(token));
+			queue.enqueue(cmd);
+		}
 	}
 }
 
-bool evaluate(Array<Command*> &array)
+void make_command(std::string token, Command &command, Queue<Command*> queue)
 {
-	
+
+		
 }
 
-/*
-void base_array_test()
+bool is_integer(std::string line)
 {
-	Base_Array<int> barr1 (11, 9);
-	barr1.set(5, 12);
-	std::cout << barr1.get(5) << std::endl;
-	std::cout << barr1.find(12) << std::endl;
-	std::cout << barr1.find(9) << std::endl;
-	std::cout << barr1.find(9, 3) << std::endl;
-	std::cout << barr1.find(9, 5) << std::endl;
-	std::cout << barr1.find(9, 7) << std::endl;
-	std::cout << barr1.find(8) << std::endl;
-	Base_Array<int> barr2 (7, 3);
-	std::cout << barr2[3] << std::endl << std::endl;
-
-//	std::cout << barr1.size() << std::endl;
-//	std::cout << barr2.size() << std::endl;
-	barr2 = barr1;
-	for(int i = 0; i < barr1.size(); i++)
-	{
-		std::cout << barr1[i] << barr2[i] << std::endl;
-	}
-	std::cout << barr1.size() << std::endl;
-	std::cout << barr2.size() << std::endl << std::endl << std::endl;
-
+    char* p;
+    strtol(line.c_str(), &p, 10);
+    return *p == 0;
 }
+// Tested. Allows the inclusion of negative integers without tripping
+// on just the negative sign. very useful
 
-void array_test()
+bool evaluate(Queue<Command*> queue)
 {
-	Array<int> arr1 (11, 9);
-	Array<int> arr3 (11, 9);
-	arr1.set(5, 12);
-	arr1.set(7, 9.0);
-
-//	std::cout << arr1.get(5) << std::endl;
-//	std::cout << arr1.find(12) << std::endl;
-//	std::cout << arr1.find(9) << std::endl;
-//	std::cout << arr1.find(9, 3) << std::endl;
-//	std::cout << arr1.find(9, 5) << std::endl;
-//	std::cout << arr1.find(9, 7) << std::endl;
-//	std::cout << arr1.find(8) << std::endl;
-//	std::cout << arr2[3] << std::endl << std::endl;
-
-	Array<int> arr2 (7, 3);
-	std::cout << arr1.size() << std::endl;
-	std::cout << arr2.size() << std::endl;
-	arr2 = arr1;
-	if(arr2 == arr1)
+	Command * cmd;
+	Stack<int> stack;
+	while( !queue.is_empty() )
 	{
-		std::cout << "They are equal [expected]" << std::endl;	
+		cmd = queue.dequeue();
+		cmd->execute(stack);
 	}
-	else
-	{
-		std::cout << "They are not equal" << std::endl;	
-	}
-
-	if(arr2 != arr1)
-	{
-		std::cout << "They are not equal" << std::endl;
-	}
-	else
-	{
-		std::cout << "They are equal [expected]" << std::endl;
-	}
-
-	if(arr3 == arr1)
-	{
-		std::cout << "They are equal" << std::endl;
-	}
-	else
-	{
-		std::cout << "They are not equal [expected]" << std::endl;
-	}
-
-	if(arr3 != arr1)
-	{
-		std::cout << "They are not equal [expected]" << std::endl;
-	}
-	else
-	{
-		std::cout << "They are equal" << std::endl;
-	}
-
-	for(int i = 0; i < arr1.size(); i++)
-	{
-		std::cout << arr1[i] << arr2[i] << std::endl;
-	}
-	std::cout << arr1.size() << std::endl;
-	std::cout << arr2.size() << std::endl << std::endl << std::endl;
-
 }
-
-void stack_test()
-{
-	Stack <int> s1;
-	Stack <int> s2;
-	for(int i = 0; i < 7; i++)
-	{
-		s1.push(i);
-	}
-	Stack <char> ch;
-	for(int i = 34; i < 87; i++)
-	{
-		ch.push(i);
-	}
-	s2 = s1;
-	Stack <int> s3 (s1);
-	Stack <int> s4 (s1);
-	Stack <char> ch2 (ch);
-	Stack <char> ch3;
-	ch3 = ch2;
-	std::cout << "First Stack" << std::endl;
-	while(!s1.is_empty())
-	{
-		std::cout << s1.size() << std::endl;
-		std::cout << s1.pop() << std::endl;
-	}
-	std::cout << s1.size() << std::endl;
-
-	std::cout << "Second Stack" << std::endl;
-	while(!s2.is_empty())
-	{
-		std::cout << s2.size() << std::endl;
-		std::cout << s2.pop() << std::endl;
-	}
-	std::cout << s2.size() << std::endl;
-
-	std::cout << "Third Stack" << std::endl;
-	while(!s3.is_empty())
-	{
-		std::cout << s3.size() << std::endl;
-		std::cout << s3.pop() << std::endl;
-	}
-	std::cout << s3.size() << std::endl;
-
-	s4.clear();
-	std::cout << "Fourth Stack" << std::endl;
-	while(!s4.is_empty())
-	{
-		std::cout << s4.size() << std::endl;
-		std::cout << s4.pop() << std::endl;
-	}
-	std::cout << s4.size() << std::endl;
-
-	Stack<int> s5 (s4);
-
-	std::cout << "Char Stack" << std::endl;
-	while(!ch.is_empty())
-	{
-		std::cout << ch.size() << std::endl;
-		std::cout << ch.pop() << std::endl;
-	}
-	std::cout << ch.size() << std::endl;
-
-	std::cout << "Char Stack" << std::endl;
-	while(!ch2.is_empty())
-	{
-		std::cout << ch2.size() << std::endl;
-		std::cout << ch2.pop() << std::endl;
-	}
-	std::cout << ch2.size() << std::endl;
-
-	std::cout << "Char Stack" << std::endl;
-	while(!ch3.is_empty())
-	{
-		std::cout << ch3.size() << std::endl;
-		std::cout << ch3.pop() << std::endl;
-	}
-	std::cout << ch.size() << std::endl;
-}
-*/
