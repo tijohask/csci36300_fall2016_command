@@ -1,3 +1,8 @@
+// Honor Pledge:
+//
+// I pledge that I have neither given nor receieved any help
+// on this assignment.
+
 //The factory that creates commands that operate on the stack
 
 #include "Abstract_Factory.h"

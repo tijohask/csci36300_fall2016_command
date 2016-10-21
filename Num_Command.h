@@ -1,3 +1,8 @@
+// Honor Pledge:
+//
+// I pledge that I have neither given nor receieved any help
+// on this assignment.
+
 #ifndef _NUM_COMMAND_H_
 #define _NUM_COMMAND_H_
 
