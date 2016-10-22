@@ -14,8 +14,10 @@
 #include "Div_Command.h"
 #include "Mod_Command.h"
 //#include "Neg_Command.h"
+// Ryan: Why is this necessary?
 #include <iostream>
 
+// Ryan: Please include comments in each file.
 class Abstract_Factory
 {
 public:

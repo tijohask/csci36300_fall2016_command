@@ -16,6 +16,7 @@
 #include "Mod_Command.h"
 //#include "Neg_Command.h"
 
+// Ryan: Please include comments in each file.
 Num_Command * Stack_Factory::create_num_command(int n)
 {
 	return new Num_Command(n);
