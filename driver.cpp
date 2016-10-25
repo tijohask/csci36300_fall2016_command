@@ -30,7 +30,7 @@
 //void base_array_test();
 void run_code();
 void run_test( Queue<std::string>& );
-bool infix_to_postfix( std::istringstream*, Stack<std::string>&, Queue<std::string>& );
+bool infix_to_postfix( std::istringstream&, Stack<std::string>&, Queue<std::string>& );
 void clear_stack( std::string, Stack<std::string>&, Queue<std::string>& );
 bool postfix_to_command( Queue<std::string>, Queue<Command*> );
 bool evaluate( Queue<Command*> );
@@ -89,7 +89,7 @@ void run_code()
 		}
 
 		std::istringstream infix (input);
-		flag = infix_to_postfix(&infix, stack, queue);
+		flag = infix_to_postfix(infix, stack, queue);
 		while( !stack.is_empty() )
 		{
 //			std::cout << stack.top() << " ";
@@ -124,13 +124,13 @@ void run_code()
  * Takes in a stringstream object and updates the queue 
  * to have the equation in postfix form
  */
-bool infix_to_postfix(std::istringstream * infix, Stack<std::string> & stack, Queue<std::string> & postfix)
+bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Queue<std::string> & postfix)
 {
 	std::string token;
 	
-	while(!infix->eof())
+	while(!infix.eof())
 	{
-		*infix >> token;
+		infix >> token;
 		
 		if( is_integer(token) )
 		{
