@@ -13,6 +13,7 @@ project (Assingment3) {
 		Abstract_Factory.h
 		Stack_Factory.h
 		Command.h
+		Binary_Command.h
 		Num_Command.h
 		Add_Command.h
 		Sub_Command.h
@@ -25,6 +26,7 @@ project (Assingment3) {
 	Source_Files {
 		driver.cpp
 		Stack_Factory.cpp
+		Binary_Command.cpp
 		Num_Command.cpp
 		Add_Command.cpp
 		Sub_Command.cpp
