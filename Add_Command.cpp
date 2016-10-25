@@ -5,18 +5,25 @@
 
 #include "Stack.h"
 #include "Command.h"
+#include "Binary_Command.h"
 #include "Add_Command.h"
-// Ryan: Why is this necessary?
-#include <iostream>
 
+#define ADD_PREC 3
+// Ryan: Why is this necessary?
+// Fix: It's not.
+// #include <iostream>
 
 // Ryan: Please include comments in each file.
 // Ryan: Why not pass the operands here rather than the stack?
 // This will allow our design to be more flexible.
-bool Add_Command :: execute(Stack<int> & stack)
+// Fix: Passing operands instead of the stack.
+int Add_Command :: eval(int n1, int n2)
 {
-	int n1 = stack.pop(), n2 = stack.pop();
-	stack.push(n1 + n2);
+	return (n1 + n2);
 }
 
 // Ryan: You should handle precedence here.
+int Add_Command :: precedence()
+{
+	return ADD_PREC;
+}

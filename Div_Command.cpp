@@ -6,16 +6,22 @@
 #include "Stack.h"
 #include "Command.h"
 #include "Div_Command.h"
+
+#define DIV_PREC 2
+
 // Ryan: Why is this necessary?
-#include <iostream>
+// Fix: It's not.
+// #include <iostream>
 
 // Ryan: Please include comments in each file.
-bool Div_Command :: execute(Stack<int> & stack)
+int Div_Command :: eval(int n1, int n2)
 {
-	// Ryan: You should check for exceptions here - 
-	// division by 0.
-	int n1 = stack.pop(), n2 = stack.pop();
-	stack.push(n1 / n2);
+	return (n1 + n2);
 }
 
+// Ryan: You should handle precedence here.
+int Div_Command :: precedence()
+{
+	return DIV_PREC;
+}
 // Ryan: You should handle precedence here.
