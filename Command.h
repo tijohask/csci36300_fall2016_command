@@ -8,7 +8,8 @@
 
 #include "Stack.h"
 // Ryan: Why is this necessary?
-#include <iostream>
+// Fix: It's not.
+// #include <iostream>
 
 // Ryan: Please include comments in each file.
 class Command
