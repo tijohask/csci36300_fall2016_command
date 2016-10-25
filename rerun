@@ -4,18 +4,12 @@ mpc.pl -type make Assignment3.mpc
 printf "\e[1;32mCreating global Makefile\e[00m\n"
 mwc.pl -type make
 
-#if [ -a Composition ]
-#  then
-#    rm Composition
-#    echo "Composition removed."
-#fi
-
 printf "\n\e[1;32mCleaning Workspace\e[00m\n"
 make clean
 printf "\n\e[1;36mCompiling code\e[00m\n"
 make
+
 printf "\n\e[1;35mRunning...\e[00m\n"
 valgrind --tool=memcheck --leak-check=full --log-file=Valgrind.txt ./Assignment3
 printf "\n\e[07mDone.\e[00m\n\n"
-sleep 2
 cat Valgrind.txt
