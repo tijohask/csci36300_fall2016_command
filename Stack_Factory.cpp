@@ -8,6 +8,7 @@
 #include "Abstract_Factory.h"
 #include "Stack_Factory.h"
 #include "Command.h"
+#include "Binary_Command.h"
 #include "Num_Command.h"
 #include "Add_Command.h"
 #include "Sub_Command.h"

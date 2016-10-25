@@ -8,6 +8,7 @@
 
 #include "Abstract_Factory.h"
 #include "Command.h"
+#include "Binary_Command.h"
 #include "Num_Command.h"
 #include "Add_Command.h"
 #include "Sub_Command.h"
@@ -16,7 +17,8 @@
 #include "Mod_Command.h"
 #include "Neg_Command.h"
 // Ryan: Why is this necessary?
-#include <iostream>
+// Fix: It's not.
+// #include <iostream>
 
 // Ryan: Please include comments in each file.
 class Stack_Factory : public Abstract_Factory
