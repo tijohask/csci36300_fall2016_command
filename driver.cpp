@@ -133,7 +133,8 @@ bool check_equation( std::istringstream & check )
 			}
 			else
 			{
-				printf( "Error: \"%s\" Operator without numbers.\n", token.c_str() );
+				printf( "Error: \"%s\" Operator without numbers.\n", 
+					token.c_str() );
 				return false;
 			}
 		}
@@ -146,7 +147,7 @@ bool check_equation( std::istringstream & check )
 			}
 			else
 			{
-				printf( "Error: Expected Number.\n" );
+				printf( "Error: Expected Operator.\n" );
 				return false;
 			}
 		}
