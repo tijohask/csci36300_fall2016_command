@@ -10,18 +10,18 @@
 #define DIV_PREC 2
 
 // Ryan: Why is this necessary?
-// Fix: It's not.
+// FIXED: It's not.
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
 int Div_Command :: eval(int n1, int n2)
 {
-	return (n1 + n2);
+	return (n1 / n2);
 }
 
 // Ryan: You should handle precedence here.
+// FIXED: Added precedence
 int Div_Command :: precedence()
 {
 	return DIV_PREC;
 }
-// Ryan: You should handle precedence here.

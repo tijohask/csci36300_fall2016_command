@@ -9,7 +9,7 @@
 #include "Stack.h"
 #include "Command.h"
 // Ryan: Why is this necessary?
-// Fix: It's not.
+// FIXED: It's not.
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
@@ -17,7 +17,8 @@ class Num_Command : public Command
 {
 public:
 	Num_Command (int n);
-	virtual bool execute (Stack <int> & stack); 
+	virtual bool execute (Stack <int> & stack);
+	virtual int precedence ();
 private:
 	int n_;
 };

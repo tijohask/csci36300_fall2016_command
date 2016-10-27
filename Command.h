@@ -8,7 +8,7 @@
 
 #include "Stack.h"
 // Ryan: Why is this necessary?
-// Fix: It's not.
+// FIXED: It's not.
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
@@ -16,10 +16,11 @@ class Command
 {
 public:
 	virtual bool execute (Stack <int> & stack) = 0;
-	
-	// Ryan: You should handle precedence here.
+
+	// Ryan: You should handle precedence here.	
+	// FIXED: Added precedence
+	virtual int precedence() = 0;
 };
 
-//#include "Command.cpp"
 
 #endif

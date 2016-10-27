@@ -9,7 +9,7 @@
 #include "Stack.h"
 #include "Command.h"
 // Ryan: Why is this necessary?
-// Fix: It's not.
+// FIXED: It's not.
 // #include <iostream>
 
 class Binary_Command : public Command
@@ -19,7 +19,6 @@ public:
 
 	virtual int eval (int n1, int n2) = 0;
 	
-	// Ryan: You should handle precedence here.
 	virtual int precedence() = 0;
 };
 

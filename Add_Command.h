@@ -18,11 +18,13 @@
 class Add_Command : public Binary_Command
 {
 public:
-// Ryan: Why not pass the operands here rather than the stack?
-// This will allow our design to be more flexible.
+	// Ryan: Why not pass the operands here rather than the stack?
+	// This will allow our design to be more flexible.
+	// FIXED: Passing operands
 	virtual int eval (int n1, int n2);
 	
 	// Ryan: You should handle precedence here.
+	// FIXED: Added precedence.
 	virtual int precedence();
 	
 };
