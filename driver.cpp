@@ -30,7 +30,9 @@
 //void base_array_test();
 void run_code();
 void run_test( Queue<std::string>& );
+bool check_equation( std::istringstream& );
 bool infix_to_postfix( std::istringstream&, Stack<std::string>&, Queue<std::string>& );
+void clear_stack( int, Stack<Command*>&, Queue<Command*>& );
 void clear_stack( std::string, Stack<std::string>&, Queue<std::string>& );
 bool postfix_to_command( Queue<std::string>, Queue<Command*> );
 bool evaluate( Queue<Command*> );
@@ -41,28 +43,9 @@ int main()
 {
 
 	printf( "Welcome to the Infix to Postfix converting program\n" );
-	
-	Queue<std::string> queue;
-	
-	run_test(queue);
-	
-	while(!queue.is_empty())
-	{
-		std::cout << queue.dequeue() << "\n";
-	}	
-	
+		
 	run_code();
 	
-}
-
-void run_test(Queue<std::string> & queue)
-{
-	std::string token = "Hello.";
-	queue.enqueue( token );
-	token = "This is a test.";
-	queue.enqueue( token );
-	token = "Goodbye.";
-	queue.enqueue( token );
 }
 
 /*
@@ -72,7 +55,6 @@ void run_test(Queue<std::string> & queue)
 void run_code()
 {
 	std::string input;
-//	std::string to_add = ":";
 	Queue<std::string> queue;
 	Queue<Command*> commands;
 	Stack<std::string> stack;
@@ -80,26 +62,28 @@ void run_code()
 	while(true)
 	{	
 		flag = true;
-		printf("Please input an equation:\n");
+		printf("Please input an equation,\nType \"QUIT\" to leave:\n");
 		getline(std::cin, input);
 
 		if( input.compare("QUIT") == 0 )
 		{
 			break;
 		}
-
-		std::istringstream infix (input);
-		flag = infix_to_postfix(infix, stack, queue);
-		while( !stack.is_empty() )
+		std::istringstream check (input);
+		flag = check_equation( check );		
+		if( flag )
 		{
-//			std::cout << stack.top() << " ";
-			queue.enqueue(stack.pop());
-		} 
-		if(flag)
+			std::istringstream infix (input);
+			flag = infix_to_postfix(infix, stack, queue);
+			while( !stack.is_empty() )
+			{
+				queue.enqueue( stack.pop() );
+			}
+		}
+		 
+		if( flag )
 		{
 			//flag = postfix_to_command(queue, commands);
-//			printf("Well, it was valid\n");
-//			queue.enqueue( to_add );
 			while(!queue.is_empty())
 			{
 				std::cout << queue.dequeue() << " ";
@@ -114,7 +98,86 @@ void run_code()
 //		}
 
 	}
-	printf("Goodbye\n");
+	printf("Goodbye.\n");
+}
+
+bool check_equation( std::istringstream & check )
+{
+	std::string token;
+	bool num_next = true;
+	int parens = 0;
+	while( !check.eof() )
+	{
+		check >> token;
+		
+		if( is_integer(token) )
+		{
+			if ( num_next )
+			{
+				num_next = false;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else if ( token.compare("+") == 0 ||
+		token.compare("-") == 0 ||
+		token.compare("*") == 0 ||
+		token.compare("/") == 0 ||
+		token.compare("%") == 0 )
+		{
+			if ( !num_next )
+			{
+				num_next = true;
+			}
+			else
+			{
+				printf( "Error: \"%s\" Operator without numbers.\n", token.c_str() );
+				return false;
+			}
+		}
+		else if ( token.compare("(") == 0 )
+		{
+			parens += 1;
+			if ( num_next ) 
+			{
+				num_next = true;
+			}
+			else
+			{
+				printf( "Error: Expected Number.\n" );
+				return false;
+			}
+		}
+		else if ( token.compare(")") == 0 )
+		{
+			parens -= 1;
+			if ( !num_next )
+			{
+				if ( parens < 0 )
+				{
+					printf( "Error: \")\" without \"(\"\n" );
+					return false;
+				}
+			}
+			else
+			{
+				printf( "Error: Invalid equation inside parenthesis.\n" );
+				return false;
+			}
+		}
+		else
+		{
+			printf( "Error: %s not recognized.\n", token.c_str() );
+			return false;
+		}
+	}
+	if( parens != 0 )
+	{
+		printf( "Error: Unequal \"(\" and \")\" operators.\n" );
+		return false;
+	}
 }
 
 // Ryan: Need to ensure that you provide the correct output and 
@@ -124,6 +187,63 @@ void run_code()
  * Takes in a stringstream object and updates the queue 
  * to have the equation in postfix form
  */
+ /*
+bool infix_to_command(std::istringstream & infix, Queue<Command*> & queue)
+{
+	std::string token;
+	Stack<Command*> stack;
+	while(!infix.eof())
+	{
+		infix >> token;
+		
+		if( is_integer(token) )
+		{
+			cmd = factory.create_num_command(std::stoi(token));
+			queue.enqueue(cmd);
+		}
+		else if( token.compare("+") == 0 )
+		{
+			cmd = factory.create_add_command();
+			clear_stack(cmd->precedence(), stack, queue);
+			stack.push( cmd );
+		}
+		else if( token.compare("-") == 0 )
+		{
+			cmd = factory.create_sub_command();
+			clear_stack(cmd->precedence(), stack, queue);
+			stack.push( cmd );
+		}
+		else if( token.compare("*") == 0 )
+		{
+			cmd = factory.create_mul_command();
+			clear_stack(cmd->precedence(), stack, queue);
+			stack.push( cmd );
+		}
+		else if( token.compare("/") == 0 )
+		{
+			cmd = factory.create_div_command();
+			clear_stack(cmd->precedence(), stack, queue);
+			stack.push( cmd );
+		}
+		else if( token.compare("%") == 0 )
+		{
+			cmd = factory.create_mod_command();
+			clear_stack(cmd->precedence(), stack, queue);
+			stack.push( cmd );
+		}
+		else if( token.compare("(") == 0 )
+		{
+			infix_to_command( infix, queue );
+		}
+		else if( token.compare(")") == 0 )
+		{
+			return true;
+		}
+	}
+//	printf("Valid equation processed. Well done.\n");
+	return true;
+}
+*/
 bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Queue<std::string> & postfix)
 {
 	std::string token;
@@ -134,59 +254,47 @@ bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Qu
 		
 		if( is_integer(token) )
 		{
-//			printf("Number!\n");
 			postfix.enqueue(token);
-//			std::cout << token << " ";
 		}
 		else if( token.compare("+") == 0 )
 		{
-//			printf("Plus!\n");
 			clear_stack( token, stack, postfix );
 			stack.push( token );
 		}
 		else if( token.compare("-") == 0 )
 		{
-//			printf("Minus!\n");
 			clear_stack( token, stack, postfix );
 			stack.push( token );
 		}
 		else if( token.compare("*") == 0 )
 		{
-//			printf("Multiplication!\n");
 			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
 			{
 				postfix.enqueue( stack.pop() );
-//				std::cout << token << " ";
 			}
 			stack.push( token );
 		}
 		else if( token.compare("/") == 0 )
 		{
-//			printf("Division!\n");
 			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
 			{
 				postfix.enqueue( stack.pop() );
-//				std::cout << token << " ";
 			}
 			stack.push( token );
 			
 		}
 		else if( token.compare("%") == 0 )
 		{
-//			printf("Modulus!\n");
 			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
 			{
 				postfix.enqueue( stack.pop() );
-//				std::cout << token << " ";
 			}
 			stack.push( token );
 			
 		}
 		else if( token.compare("(") == 0 )
 		{
-//			printf("Parenthesis!\n");			
 			stack.push( token );
-//			*infix >> token;
 			// Use an if statement to make sure that if the process fails
 			// while recursing, it fails all the way up.
 			if( !infix_to_postfix( infix, stack, postfix ) )
@@ -197,19 +305,14 @@ bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Qu
 		}
 		else if( token.compare(")") == 0 )
 		{
-//			printf("Parenthesis!\n");
 			clear_stack( token, stack, postfix );			
-			break;
+			return true;
 		}
 		else
 		{
 			std::cout << token << " Is not a valid equation character.\n";
 			return false;
 		}
-//		else if( token.compare("-") == 0 )
-//		{
-//			
-//		}
 	}
 //	printf("Valid equation processed. Well done.\n");
 	return true;
@@ -221,6 +324,13 @@ bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Qu
  * is a closed parenthesis, pop until you see an open parenthesis. Else, pop 
  * until the stack is empty.
  */
+void clear_stack(int prec, Stack<Command*> & stack, Queue<Command*> & take)
+{
+	while( !stack.is_empty() && stack.top()->precedence() <= prec )
+	{
+		take.enqueue( stack.pop() );
+	}
+}
 
 void clear_stack(std::string until, Stack<std::string> & stack, Queue<std::string> & take)
 {
@@ -265,6 +375,7 @@ void clear_stack(std::string until, Stack<std::string> & stack, Queue<std::strin
 		}
 	}
 }
+
 
 /*
  * This will take the postfix queue created above and parse it into a command queue
