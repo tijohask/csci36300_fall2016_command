@@ -86,7 +86,7 @@ void run_code()
 			//flag = postfix_to_command(queue, commands);
 			while(!queue.is_empty())
 			{
-				std::cout << queue.dequeue() << " ";
+				printf( "%s ", queue.dequeue().c_str() );
 			}
 			printf("\n");
 		
@@ -310,7 +310,7 @@ bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Qu
 		}
 		else
 		{
-			std::cout << token << " Is not a valid equation character.\n";
+			printf( "%s Is not a valid equation character.\n", token.c_str() );
 			return false;
 		}
 	}
