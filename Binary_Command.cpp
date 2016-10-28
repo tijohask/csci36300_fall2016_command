@@ -11,7 +11,15 @@
 bool Binary_Command :: execute(Stack<int> & stack)
 {
 	int n2 = stack.pop(), n1 = stack.pop();
-	int result = this->eval(n1, n2);
-	stack.push(result);
+	try
+	{
+		int result = this->eval(n1, n2);
+		stack.push(result);
+	}
+	catch( int e )
+	{
+		return false;
+	}
+	return true;
 }
 

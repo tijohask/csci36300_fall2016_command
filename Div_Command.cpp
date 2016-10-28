@@ -16,6 +16,10 @@
 // Ryan: Please include comments in each file.
 int Div_Command :: eval(int n1, int n2)
 {
+	if( n2 == 0 )
+	{
+		throw 0;
+	}
 	return (n1 / n2);
 }
 

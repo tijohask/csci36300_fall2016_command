@@ -19,6 +19,7 @@ Num_Command :: Num_Command(int n): n_(n)
 bool Num_Command :: execute(Stack<int> & stack)
 {
 	stack.push(n_);
+	return true;
 }
 
 int Num_Command :: precedence()

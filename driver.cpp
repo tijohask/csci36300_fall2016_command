@@ -47,11 +47,12 @@ void run_code()
 {
 	std::string input;
 	Queue<std::string> queue;
-	Queue<Command*> commands;
+//	Queue<Command*> commands;
 	Stack<std::string> stack;
 	bool flag = true;
 	while(true)
 	{	
+		Queue<Command*> commands;
 		flag = true;
 		printf("Please input an equation:\n");
 		getline(std::cin, input);
@@ -72,7 +73,7 @@ void run_code()
 		 
 		if( flag )
 		{
-			printf( "%d\n", evaluate( commands ) );
+			evaluate( commands );
 		}
 
 	}
@@ -262,14 +263,24 @@ int evaluate(Queue<Command*> queue)
 {
 	Command * cmd;
 	Stack<int> stack;
-	while( !queue.is_empty() )
+	bool flag = true;
+	while( !queue.is_empty() && flag )
 	{
 		cmd = queue.dequeue();
-		cmd->execute(stack);
+		flag = cmd->execute(stack);
 		delete cmd;
 	}
-	if( !stack.is_empty() )
+	if( !stack.is_empty() && flag )
 	{
-		return stack.pop();
+		printf( "%d\n", stack.pop() );
+	}
+	if( !flag )
+	{
+		while( !queue.is_empty() )
+		{
+			cmd = queue.dequeue();
+			delete cmd;
+		}
+		printf( "Undefined error: cannot divide or mod by 0\n" );
 	}
 }
