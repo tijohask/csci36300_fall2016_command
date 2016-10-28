@@ -31,11 +31,12 @@
 void run_code();
 void run_test( Queue<std::string>& );
 bool check_equation( std::istringstream& );
+bool infix_to_command( std::istringstream&, Queue<Command*>& );
 bool infix_to_postfix( std::istringstream&, Stack<std::string>&, Queue<std::string>& );
 void clear_stack( int, Stack<Command*>&, Queue<Command*>& );
 void clear_stack( std::string, Stack<std::string>&, Queue<std::string>& );
 bool postfix_to_command( Queue<std::string>, Queue<Command*> );
-bool evaluate( Queue<Command*> );
+int evaluate( Queue<Command*> );
 void make_command( std::string token, Command &command, Queue<Command*> queue );
 bool is_integer( std::string );
 
@@ -69,33 +70,31 @@ void run_code()
 		{
 			break;
 		}
-		std::istringstream check (input);
-		flag = check_equation( check );		
+		std::istringstream infix (input);
+		flag = check_equation( infix );		
+		infix.clear();
 		if( flag )
 		{
-			std::istringstream infix (input);
-			flag = infix_to_postfix(infix, stack, queue);
+			infix.str(input);
+			infix_to_postfix(infix, stack, queue);
 			while( !stack.is_empty() )
 			{
 				queue.enqueue( stack.pop() );
 			}
+			infix.clear();
+			infix.str(input);
+			infix_to_command( infix, commands );
 		}
 		 
 		if( flag )
 		{
-			//flag = postfix_to_command(queue, commands);
 			while(!queue.is_empty())
 			{
 				printf( "%s ", queue.dequeue().c_str() );
 			}
 			printf("\n");
-		
+			printf( "%d\n", evaluate( commands ) );
 		}
-
-//		if(flag)
-//		{
-//			evaluate(commands);
-//		}
 
 	}
 	printf("Goodbye.\n");
@@ -188,21 +187,18 @@ bool check_equation( std::istringstream & check )
  * Takes in a stringstream object and updates the queue 
  * to have the equation in postfix form
  */
- /*
+
 bool infix_to_command(std::istringstream & infix, Queue<Command*> & queue)
 {
 	std::string token;
 	Stack<Command*> stack;
+	Command *cmd = NULL;
+	Stack_Factory factory;
 	while(!infix.eof())
 	{
 		infix >> token;
 		
-		if( is_integer(token) )
-		{
-			cmd = factory.create_num_command(std::stoi(token));
-			queue.enqueue(cmd);
-		}
-		else if( token.compare("+") == 0 )
+		if( token.compare("+") == 0 )
 		{
 			cmd = factory.create_add_command();
 			clear_stack(cmd->precedence(), stack, queue);
@@ -238,13 +234,21 @@ bool infix_to_command(std::istringstream & infix, Queue<Command*> & queue)
 		}
 		else if( token.compare(")") == 0 )
 		{
-			return true;
+			break;
+		}
+		else
+		{
+			cmd = factory.create_num_command(std::stoi(token));
+			queue.enqueue(cmd);
 		}
 	}
-//	printf("Valid equation processed. Well done.\n");
+	while( !stack.is_empty() )
+	{
+		queue.enqueue( stack.pop() );
+	}
 	return true;
 }
-*/
+
 bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Queue<std::string> & postfix)
 {
 	std::string token;
@@ -382,7 +386,7 @@ void clear_stack(std::string until, Stack<std::string> & stack, Queue<std::strin
  * This will take the postfix queue created above and parse it into a command queue
  */
 
-bool postfix_to_command(Queue<std::string> input, Queue<Command*> queue)
+bool postfix_to_command(Queue<std::string> input, Queue<Command*> & queue)
 {
 	std::string work;
 	std::string token;
@@ -446,7 +450,7 @@ bool is_integer(std::string line)
  * number on the top of the stack. If the stack does not have exactly one 
  * element, return false.
  */
-bool evaluate(Queue<Command*> queue)
+int evaluate(Queue<Command*> queue)
 {
 	Command * cmd;
 	Stack<int> stack;
@@ -454,5 +458,9 @@ bool evaluate(Queue<Command*> queue)
 	{
 		cmd = queue.dequeue();
 		cmd->execute(stack);
+	}
+	if( !stack.is_empty() )
+	{
+		return stack.pop();
 	}
 }
