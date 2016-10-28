@@ -17,34 +17,24 @@
 #include "Mul_Command.h"
 #include "Div_Command.h"
 #include "Mod_Command.h"
-//#include "Neg_Command.h"
 
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
-//#include <stack>
 
-//void array_test();
-//void stack_test();
-//void base_array_test();
 void run_code();
-void run_test( Queue<std::string>& );
 bool check_equation( std::istringstream& );
 bool infix_to_command( std::istringstream&, Queue<Command*>& );
-bool infix_to_postfix( std::istringstream&, Stack<std::string>&, Queue<std::string>& );
 void clear_stack( int, Stack<Command*>&, Queue<Command*>& );
-void clear_stack( std::string, Stack<std::string>&, Queue<std::string>& );
-bool postfix_to_command( Queue<std::string>, Queue<Command*> );
 int evaluate( Queue<Command*> );
-void make_command( std::string token, Command &command, Queue<Command*> queue );
 bool is_integer( std::string );
 
 int main()
 {
 
 	printf( "Welcome to the Infix to Postfix converting program\n" );
-		
+	printf( "Type \"QUIT\" to leave.\n" );
 	run_code();
 	
 }
@@ -63,7 +53,7 @@ void run_code()
 	while(true)
 	{	
 		flag = true;
-		printf("Please input an equation,\nType \"QUIT\" to leave:\n");
+		printf("Please input an equation:\n");
 		getline(std::cin, input);
 
 		if( input.compare("QUIT") == 0 )
@@ -75,12 +65,6 @@ void run_code()
 		infix.clear();
 		if( flag )
 		{
-			infix.str(input);
-			infix_to_postfix(infix, stack, queue);
-			while( !stack.is_empty() )
-			{
-				queue.enqueue( stack.pop() );
-			}
 			infix.clear();
 			infix.str(input);
 			infix_to_command( infix, commands );
@@ -88,11 +72,6 @@ void run_code()
 		 
 		if( flag )
 		{
-			while(!queue.is_empty())
-			{
-				printf( "%s ", queue.dequeue().c_str() );
-			}
-			printf("\n");
 			printf( "%d\n", evaluate( commands ) );
 		}
 
@@ -249,80 +228,6 @@ bool infix_to_command(std::istringstream & infix, Queue<Command*> & queue)
 	return true;
 }
 
-bool infix_to_postfix(std::istringstream & infix, Stack<std::string> & stack, Queue<std::string> & postfix)
-{
-	std::string token;
-	
-	while(!infix.eof())
-	{
-		infix >> token;
-		
-		if( is_integer(token) )
-		{
-			postfix.enqueue(token);
-		}
-		else if( token.compare("+") == 0 )
-		{
-			clear_stack( token, stack, postfix );
-			stack.push( token );
-		}
-		else if( token.compare("-") == 0 )
-		{
-			clear_stack( token, stack, postfix );
-			stack.push( token );
-		}
-		else if( token.compare("*") == 0 )
-		{
-			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
-			{
-				postfix.enqueue( stack.pop() );
-			}
-			stack.push( token );
-		}
-		else if( token.compare("/") == 0 )
-		{
-			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
-			{
-				postfix.enqueue( stack.pop() );
-			}
-			stack.push( token );
-			
-		}
-		else if( token.compare("%") == 0 )
-		{
-			if( !stack.is_empty() && ( (stack.top().compare("*") == 0 || stack.top().compare("/") == 0 || stack.top().compare("%") == 0) ) )
-			{
-				postfix.enqueue( stack.pop() );
-			}
-			stack.push( token );
-			
-		}
-		else if( token.compare("(") == 0 )
-		{
-			stack.push( token );
-			// Use an if statement to make sure that if the process fails
-			// while recursing, it fails all the way up.
-			if( !infix_to_postfix( infix, stack, postfix ) )
-			{
-				return false;
-			}
-			
-		}
-		else if( token.compare(")") == 0 )
-		{
-			clear_stack( token, stack, postfix );			
-			return true;
-		}
-		else
-		{
-			printf( "%s Is not a valid equation character.\n", token.c_str() );
-			return false;
-		}
-	}
-//	printf("Valid equation processed. Well done.\n");
-	return true;
-}
-
 /*
  * Clear the stack, with rules based on the string passed in. If the string
  * is a + or - sign, pop until you see a plus or a minus sign. If the string
@@ -334,103 +239,6 @@ void clear_stack(int prec, Stack<Command*> & stack, Queue<Command*> & take)
 	while( !stack.is_empty() && stack.top()->precedence() <= prec )
 	{
 		take.enqueue( stack.pop() );
-	}
-}
-
-void clear_stack(std::string until, Stack<std::string> & stack, Queue<std::string> & take)
-{
-	while( !stack.is_empty() )
-	{
-		if( ( until.compare("+") == 0 || until.compare("-") == 0 ) )
-		{
-			if( stack.top().compare("+") == 0 || stack.top().compare("-") == 0 )
-			{
-//				std::cout << stack.top() << " ";
-				take.enqueue( stack.pop() );
-//				printf("Added plus or minus to the queue.");
-				break;
-			}
-			else if( stack.top().compare("(") == 0 )
-			{
-				break;
-			}
-			else
-			{
-//				std::cout << stack.top() << " ";
-				take.enqueue( stack.pop() );
-			}
-		}
-		else if( until.compare(")") == 0 )
-		{
-			if( stack.top().compare("(") == 0 )
-			{
-				stack.pop();
-				break;
-			}
-			else
-			{
-//				std::cout << stack.top() << " ";
-				take.enqueue( stack.pop() );
-			}
-		}
-		else
-		{
-//			std::cout << stack.top() << " ";
-			take.enqueue( stack.pop() );
-		}
-	}
-}
-
-
-/*
- * This will take the postfix queue created above and parse it into a command queue
- */
-
-bool postfix_to_command(Queue<std::string> input, Queue<Command*> & queue)
-{
-	std::string work;
-	std::string token;
-	Command *cmd = NULL;
-	Stack_Factory factory;
-	while(!input.is_empty())
-	{
-		token = input.dequeue();
-			
-		if(      token.compare("+") == 0 )
-		{
-			cmd = factory.create_add_command();
-			queue.enqueue(cmd);
-		}
-		else if( token.compare("-") == 0 )
-		{
-			cmd = factory.create_sub_command();
-			queue.enqueue(cmd);
-		}
-		else if( token.compare("*") == 0 )
-		{
-			cmd = factory.create_mul_command();
-			queue.enqueue(cmd);
-		}
-		else if( token.compare("/") == 0 )
-		{
-			cmd = factory.create_div_command();
-			queue.enqueue(cmd);
-		}
-		else if( token.compare("%") == 0 )
-		{
-			cmd = factory.create_mod_command();
-			queue.enqueue(cmd);
-		}
-//		else if( token.compare("-") == 0 )
-//		{
-//			cmd = factory.create_neg_command();
-//			queue.enqueue(cmd);
-//		}
-		else
-		{
-			cmd = factory.create_num_command(std::stoi(token));
-			queue.enqueue(cmd);
-		}
 	}
 }
 
