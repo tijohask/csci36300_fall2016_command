@@ -266,6 +266,7 @@ int evaluate(Queue<Command*> queue)
 	{
 		cmd = queue.dequeue();
 		cmd->execute(stack);
+		delete cmd;
 	}
 	if( !stack.is_empty() )
 	{
