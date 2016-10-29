@@ -14,6 +14,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Mul command. Multiply the top two elements of the stack
 class Mul_Command : public Binary_Command
 {
 public:

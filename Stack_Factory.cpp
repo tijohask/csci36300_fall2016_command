@@ -17,6 +17,7 @@
 #include "Mod_Command.h"
 
 // Ryan: Please include comments in each file.
+// FIXED: these should all be self explanatory.
 Num_Command * Stack_Factory::create_num_command(int n)
 {
 	return new Num_Command(n);

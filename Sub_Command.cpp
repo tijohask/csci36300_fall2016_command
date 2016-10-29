@@ -13,11 +13,14 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
 // Ryan: Why not pass the operands here rather than the stack?
 // This will allow our design to be more flexible.
 // FIXED: Passing operands
 int Sub_Command :: eval(int n1, int n2)
 {
+	//return the subtraction of the top two elements on the stack
 	return (n1 - n2);
 }
 

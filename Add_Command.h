@@ -14,7 +14,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
 
+// Add command. Applies addition to the operands
 class Add_Command : public Binary_Command
 {
 public:

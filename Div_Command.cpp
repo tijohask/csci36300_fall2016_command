@@ -14,12 +14,16 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Div command. Divides the top two elements of the stack.
 int Div_Command :: eval(int n1, int n2)
 {
 	if( n2 == 0 )
-	{
+	{//If the divisor is 0, throw an error.
 		throw 0;
 	}
+	//return division of the numbers.
 	return (n1 / n2);
 }
 

@@ -13,10 +13,15 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Num command. Push a number onto the stack
 class Num_Command : public Command
 {
 public:
+	//construct with a number
 	Num_Command (int n);
+	//push the number on the stack
 	virtual bool execute (Stack <int> & stack);
 	virtual int precedence ();
 private:

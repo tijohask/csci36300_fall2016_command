@@ -19,6 +19,7 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added Comments
 class Abstract_Factory
 {
 public:

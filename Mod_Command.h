@@ -14,6 +14,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Mod Command. Applies modulus to the operands.
 class Mod_Command : public Binary_Command
 {
 public:

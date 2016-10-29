@@ -14,6 +14,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Div Command. Applies divide on the operands.
 class Div_Command : public Binary_Command
 {
 public:

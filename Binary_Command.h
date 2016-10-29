@@ -15,13 +15,12 @@
 class Binary_Command : public Command
 {
 public:
+	// Take two elements from the top and apply eval on them
 	virtual bool execute(Stack<int> & stack);
 
 	virtual int eval (int n1, int n2) = 0;
 	
 	virtual int precedence() = 0;
 };
-
-//#include "Command.cpp"
 
 #endif

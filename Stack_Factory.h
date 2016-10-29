@@ -15,12 +15,12 @@
 #include "Mul_Command.h"
 #include "Div_Command.h"
 #include "Mod_Command.h"
-#include "Neg_Command.h"
 // Ryan: Why is this necessary?
 // Fix: It's not.
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
 class Stack_Factory : public Abstract_Factory
 {
 public:
@@ -30,7 +30,6 @@ public:
 	virtual Mul_Command * create_mul_command ();
 	virtual Div_Command * create_div_command ();
 	virtual Mod_Command * create_mod_command ();
-//	virtual Neg_Command * create_neg_command ();
 };
 
 #endif

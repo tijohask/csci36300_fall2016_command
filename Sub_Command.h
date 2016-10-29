@@ -15,6 +15,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// Sub command. Subtracts the two operands form the top of the stack.
 class Sub_Command : public Binary_Command
 {
 public:

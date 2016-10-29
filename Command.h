@@ -12,6 +12,9 @@
 // #include <iostream>
 
 // Ryan: Please include comments in each file.
+// FIXED: Added comments
+
+// The top object that all other command objects will be inheriting from.
 class Command
 {
 public:
