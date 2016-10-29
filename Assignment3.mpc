@@ -20,7 +20,6 @@ project (Assingment3) {
 		Mul_Command.h
 		Div_Command.h
 		Mod_Command.h
-//		Neg_Command.h
 	}
 
 	Source_Files {
@@ -33,7 +32,6 @@ project (Assingment3) {
 		Mul_Command.cpp
 		Div_Command.cpp
 		Mod_Command.cpp
-//		Neg_Command.cpp
 	}
 
 	Template_Files {
