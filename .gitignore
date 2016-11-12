@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+Assignment3
+
+# Makefiles
+Makefile
+Makefile.*
