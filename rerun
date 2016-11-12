@@ -10,6 +10,6 @@ printf "\n\e[1;36mCompiling code\e[00m\n"
 make
 
 printf "\n\e[1;35mRunning...\e[00m\n"
-valgrind --tool=memcheck --leak-check=full --log-file=Valgrind.txt ./Assignment3
+printf "( 1 + 2 ) * 4\n( ( 1 + 2 )\n( 2 + 3 ) )\n5 / 0\nQUIT" | valgrind --tool=memcheck --leak-check=full --log-file=Valgrind.txt ./Assignment3
 printf "\n\e[07mDone.\e[00m\n\n"
 cat Valgrind.txt
